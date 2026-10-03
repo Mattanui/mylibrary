@@ -15,7 +15,7 @@
     <div class="min-h-screen flex flex-col">
         <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
             <div class="flex justify-between items-center p-4 md:px-8">
-                <a href="{{ url('/') }}" class="text-2xl md-text-3xl font-blod">MyLibrary</a>
+                <a href="{{ url('/') }}" class="text-2xl md-text-3xl font-bold">MyLibrary</a>
                 <label for="burger-toggle" class="cursor-pointer md:hidden flex flex-col justify-between h-5 w-7">
                     <span class="block h-1 w-full bg-black rounded"></span>
                     <span class="block h-1 w-full bg-black rounded"></span>
