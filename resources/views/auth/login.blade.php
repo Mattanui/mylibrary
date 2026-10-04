@@ -31,6 +31,16 @@
             </div>
         </form>
 
+        @if (config('services.google.client_id'))
+        <div class="mt-6 text-center">
+            <p class="text-gray-500 mb-3">ou</p>
+            <a href="{{ route('google.redirect') }}"
+               class="inline-block border-2 border-black bg-white px-8 py-3 font-bold hover:bg-gray-200 transition-colors">
+                Continuer avec Google
+            </a>
+        </div>
+        @endif
+
         <p class="mt-6">
             Pas encore de compte ?
             <a href="{{ route('register') }}" class="text-blue-600 hover:underline">S'inscrire</a>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleController;
 
 Route::redirect('/', '/livres');
 
@@ -11,6 +12,9 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/connexion', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/connexion', [AuthController::class, 'login']);
+
+    Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.redirect');
+    Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 });
 
 Route::middleware('auth')->group(function () {
