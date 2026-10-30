@@ -55,6 +55,12 @@
         </header>
 
         <main class="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full">
+            @if (session('message'))
+            <div class="mb-6 border-2 border-green-700 bg-green-50 text-green-800 font-semibold px-4 py-3">
+                {{ session('message') }}
+            </div>
+            @endif
+
             {{ $slot }}
         </main>
 

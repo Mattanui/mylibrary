@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\LivreForm;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
 
     Route::view('/livres', 'en-construction', ['title' => 'Tous les livres'])->name('livres.index');
     Route::view('/mes-livres', 'en-construction', ['title' => 'Mes livres'])->name('livres.mes');
-    Route::view('/livres/ajouter', 'en-construction', ['title' => 'Ajouter un livre'])->name('livres.create');
+    Route::livewire('/livres/ajouter', LivreForm::class)->name('livres.create');
+    Route::livewire('/livres/{livre}/modifier', LivreForm::class)->name('livres.edit');
     Route::view('/page-api', 'en-construction', ['title' => 'Page API'])->name('page-api');
 });
