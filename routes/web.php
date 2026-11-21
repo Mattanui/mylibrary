@@ -27,5 +27,5 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/mes-livres', MesLivres::class)->name('livres.mes');
     Route::livewire('/livres/ajouter', LivreForm::class)->name('livres.create');
     Route::livewire('/livres/{livre}/modifier', LivreForm::class)->name('livres.edit');
-    Route::view('/page-api', 'en-construction', ['title' => 'Page API'])->name('page-api');
+    Route::view('/page-api', 'page-api')->name('page-api');
 });
