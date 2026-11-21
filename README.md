@@ -1,58 +1,105 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MyLibrary
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application web de gestion d'une bibliothèque, réalisée pour l'évaluation de dispense
+de l'UE « Projet de développement Web » (IRAM).
 
-## About Laravel
+**Technologies :** Laravel 13, Livewire 4, MySQL, Blade, Tailwind CSS (via Vite), JavaScript (`fetch`).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fonctionnalités
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Inscription, connexion et déconnexion (formulaires écrits à la main) ; connexion Google en option.
+- Gestion des livres avec Livewire : ajout, modification et suppression de ses propres livres
+  (titre, ISBN-10/13 vérifié, catégorie, prix, photo de couverture et photo du dos).
+- Catégories créées par un Seeder qui lit `database/data/categories.csv` et normalise les noms.
+- Listes Livewire « Mes livres » et « Tous les livres », filtrables par catégorie, paginées.
+- API JSON `GET /api/livres`, réservée aux utilisateurs connectés (Laravel Sanctum).
+- « Page API » : tableau HTML rempli en JavaScript à partir de l'API.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Prérequis
 
-## Learning Laravel
+- PHP 8.4 ou plus récent, avec les extensions `pdo_mysql`, `mbstring`, `fileinfo`
+- Composer
+- Node.js (version LTS) et npm
+- MySQL 8
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Récupérer le projet et installer les dépendances :
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+   ```bash
+   git clone https://github.com/Mattanui/mylibrary.git
+   cd mylibrary
+   composer install
+   npm install
+   ```
 
-## Agentic Development
+2. Créer la base de données (dans MySQL) :
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+   ```sql
+   CREATE DATABASE mylibrary CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
 
-```bash
-composer require laravel/boost --dev
+3. Configurer l'environnement :
 
-php artisan boost:install
+   ```bash
+   cp .env.example .env        # sous Windows PowerShell : Copy-Item .env.example .env
+   php artisan key:generate
+   ```
+
+   Dans `.env`, adapter si nécessaire `DB_USERNAME` et `DB_PASSWORD`.
+
+4. Créer les tables, charger les catégories depuis le CSV et rendre les images accessibles :
+
+   ```bash
+   php artisan migrate --seed
+   php artisan storage:link
+   ```
+
+5. Lancer l'application (deux terminaux) :
+
+   ```bash
+   php artisan serve
+   npm run dev
+   ```
+
+6. Ouvrir **http://localhost:8000** (et non `127.0.0.1:8000`), puis créer un compte via « Inscription ».
+
+> Sans `npm run dev`, il est aussi possible de compiler une fois les fichiers CSS/JS avec `npm run build`.
+
+## Connexion Google (facultative)
+
+Le bouton « Continuer avec Google » n'apparaît que si les identifiants Google sont renseignés dans `.env` :
+
+```env
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Sans ces valeurs, l'application fonctionne normalement avec l'inscription classique.
 
-## Contributing
+## Pages principales
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Adresse | Contenu | Accès |
+|---|---|---|
+| `/inscription`, `/connexion` | Authentification | Visiteurs |
+| `/livres` | Tous les livres | Connecté |
+| `/mes-livres` | Mes livres (modifier, supprimer) | Connecté |
+| `/livres/ajouter`, `/livres/{id}/modifier` | Formulaire Livewire | Connecté (propriétaire pour la modification) |
+| `/page-api` | Tableau rempli en JavaScript via l'API | Connecté |
+| `/api/livres` | API JSON | Connecté (appel depuis les pages du site) |
 
-## Code of Conduct
+## Organisation du code
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Élément | Emplacement |
+|---|---|
+| Migrations | `database/migrations/` |
+| Seeder du CSV | `database/seeders/CategorieSeeder.php`, fichier `database/data/categories.csv` |
+| Modèles et relations | `app/Models/` (`User`, `Livre`, `Categorie`) |
+| Contrôleurs | `app/Http/Controllers/` (`AuthController`, `GoogleController`, `Api/LivreController`) |
+| Composants Livewire | `app/Livewire/` + vues dans `resources/views/livewire/` |
+| Règle de validation ISBN | `app/Rules/Isbn.php` |
+| Format JSON de l'API | `app/Http/Resources/LivreResource.php` |
+| Layout et vues | `resources/views/layouts/app.blade.php`, `resources/views/` |
+| JavaScript de la page API | `resources/js/page-api.js` |
+| Routes | `routes/web.php`, `routes/api.php` |
