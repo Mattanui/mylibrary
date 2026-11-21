@@ -4,6 +4,8 @@ use App\Livewire\LivreForm;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
+use App\Livewire\MesLivres;
+use App\Livewire\TousLesLivres;
 
 Route::redirect('/', '/livres');
 
@@ -21,8 +23,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/deconnexion', [AuthController::class, 'logout'])->name('logout');
 
-    Route::view('/livres', 'en-construction', ['title' => 'Tous les livres'])->name('livres.index');
-    Route::view('/mes-livres', 'en-construction', ['title' => 'Mes livres'])->name('livres.mes');
+    Route::livewire('/livres', TousLesLivres::class)->name('livres.index');
+    Route::livewire('/mes-livres', MesLivres::class)->name('livres.mes');
     Route::livewire('/livres/ajouter', LivreForm::class)->name('livres.create');
     Route::livewire('/livres/{livre}/modifier', LivreForm::class)->name('livres.edit');
     Route::view('/page-api', 'en-construction', ['title' => 'Page API'])->name('page-api');
